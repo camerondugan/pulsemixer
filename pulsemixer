@@ -973,6 +973,12 @@ class Bar():
             self.owner = pa.owner
         self.pa = pa
 
+    def set_default_sink(self):
+        if type(self.pa) is PulseSinkInfo:
+            PULSE.set_default_sink(self.pa.name)
+        else:
+            PULSE.set_default_source(self.pa.name)
+
     def mute_toggle(self):
         PULSE.unmute_stream(self.pa) if self.muted else PULSE.mute_stream(self.pa)
 
@@ -1363,7 +1369,8 @@ class Screen():
                 self.scroll_first()
             elif c in CFG.keys.bottom:
                 self.scroll_last()
-
+            elif c in CFG.keys.default:
+                bar.set_default_sink()
             elif c in CFG.keys.mute:
                 bar.mute_toggle()
             elif c in CFG.keys.lock:
@@ -1589,6 +1596,7 @@ class Screen():
                ('h l   ← →',                        'Change volume'),
                ('H L   Shift←  Shift→',             'Change volume by 10'),
                ('1 2 3 .. 8 9 0',                   'Set volume to 10%-100%'),
+               ('d',                                'Set default'),
                ('m',                                'Mute/Unmute'),
                ('Space',                            'Lock/Unlock channels'),
                ('Enter',                            'Context menu'),
@@ -1752,6 +1760,7 @@ class Config():
             mode3       = [curses.KEY_F3]
             next_mode   = [self._more_keys['KEY_TAB']]
             prev_mode   = [curses.KEY_BTAB]
+            default     = [ord('d')]
             mute        = [ord('m')]
             lock        = [ord(' ')]
             quit        = [ord('q'), self._more_keys['KEY_ESC']]
