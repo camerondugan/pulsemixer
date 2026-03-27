@@ -11,6 +11,8 @@
       '';
     in
     {
+      packages.default = pulsemixer;
+
       apps.default = {
         type = "app";
         program = "${pulsemixer}/bin/pulsemixer";
